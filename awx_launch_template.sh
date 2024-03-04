@@ -1,10 +1,15 @@
 #!/bin/bash
 
+# Assign arguments to variables
+AWX_HOST="$1"
+JOB_TEMPLATE_ID="$2"
+ADMIN_TOKEN="$3"
+
 # Variables
-AWX_HOST="54.221.180.223:8043"
-JOB_TEMPLATE_ID="7"
+#AWX_HOST="54.221.180.223:8043"
+#JOB_TEMPLATE_ID="7"
 LAUNCH_ENDPOINT="/api/v2/job_templates/${JOB_TEMPLATE_ID}/launch/"
-ADMIN_TOKEN="wGsqreQ2LH6413uK1FzYht96q7Bh0L"
+#ADMIN_TOKEN="wGsqreQ2LH6413uK1FzYht96q7Bh0L"
 CONTENT_TYPE="Content-Type: application/json"
 AUTHORIZATION="Authorization: Bearer ${ADMIN_TOKEN}"
 CHECK_INTERVAL=5 # How often to check the job status, in seconds
