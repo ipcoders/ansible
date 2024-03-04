@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Assign arguments to variables
+# Example: ./script_name.sh 54.221.180.223:8043 7 wGsqreQ2LH6413uK1FzYht96q7Bh0L
 AWX_HOST="$1"
 JOB_TEMPLATE_ID="$2"
 ADMIN_TOKEN="$3"
