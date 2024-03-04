@@ -23,15 +23,15 @@ response=$(curl -s -k -X POST \
                   "https://${AWX_HOST}${LAUNCH_ENDPOINT}")
 
 # Extract job ID and stdout URL from the response
-job_id=$(echo "${response}" | jq -r '.job')
-stdout_url=$(echo "${response}" | jq -r '.related.stdout')
+job_id=$(echo "${response}" | /usr/bin/jq -r '.job')
+stdout_url=$(echo "${response}" | /usr/bin/jq -r '.related.stdout')
 
 echo "Job ID: $job_id"
 echo "Stdout URL: $stdout_url"
 
 # Function to check job status
 function check_job_status {
-    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}/api/v2/jobs/${job_id}/" | jq -r '.status'
+    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}/api/v2/jobs/${job_id}/" | /usr/bin/jq -r '.status'
 }
 
 # Poll the job status
