@@ -1,5 +1,6 @@
 - name: GET IP
-  hosts: all
+  hosts: localhost
+  gather_facts: no
   tasks:
     - name: RESULT
       debug:
