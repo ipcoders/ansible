@@ -44,7 +44,7 @@ echo "Job completed with status: $status"
 # Fetch the job output and extract the IP address, then write it to results.txt
 if [ "$status" = "successful" ]; then
     echo "Fetching job output and extracting IP address..."
-    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt" | grep "RESULTS:" | awk -F':' '{print $2}' | tr -d ' ' > results.txt
+    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt" | grep "RESULTS:" | cut -d':' -f3 | tr -d '"' > results.txt
 else
     echo "Job failed. Stdout not fetched."
 fi
