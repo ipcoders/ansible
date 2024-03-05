@@ -7,10 +7,7 @@ JOB_TEMPLATE_ID="$2"
 ADMIN_TOKEN="$3"
 
 # Variables
-#AWX_HOST="54.221.180.223:8043"
-#JOB_TEMPLATE_ID="7"
 LAUNCH_ENDPOINT="/api/v2/job_templates/${JOB_TEMPLATE_ID}/launch/"
-#ADMIN_TOKEN="wGsqreQ2LH6413uK1FzYht96q7Bh0L"
 CONTENT_TYPE="Content-Type: application/json"
 AUTHORIZATION="Authorization: Bearer ${ADMIN_TOKEN}"
 CHECK_INTERVAL=5 # How often to check the job status, in seconds
@@ -46,8 +43,11 @@ echo "Job completed with status: $status"
 
 # Fetch and display the job result if the job was successful
 if [ "$status" = "successful" ]; then
-    echo "Fetching job output..."
-    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt" > results.txt 
+    echo "Fetching job output and extracting IP address..."
+    # Fetch job output
+    job_output=$(curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt")
+    # Extract IP address and save to results.txt
+    echo "$job_output" | grep "RESULTS:" | awk -F':' '{print $2}' | tr -d ' ' > results.txt
 else
     echo "Job failed. Stdout not fetched."
 fi
