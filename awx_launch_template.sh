@@ -20,15 +20,15 @@ response=$(curl -s -k -X POST \
                   "https://${AWX_HOST}${LAUNCH_ENDPOINT}")
 
 # Extract job ID and stdout URL from the response
-job_id=$(echo "${response}" | /usr/bin/jq -r '.job')
-stdout_url=$(echo "${response}" | /usr/bin/jq -r '.related.stdout')
+job_id=$(echo "${response}" | jq -r '.job')
+stdout_url=$(echo "${response}" | jq -r '.related.stdout')
 
 echo "Job ID: $job_id"
 echo "Stdout URL: $stdout_url"
 
 # Function to check job status
 function check_job_status {
-    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}/api/v2/jobs/${job_id}/" | /usr/bin/jq -r '.status'
+    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}/api/v2/jobs/${job_id}/" | jq -r '.status'
 }
 
 # Poll the job status
@@ -41,13 +41,10 @@ done
 
 echo "Job completed with status: $status"
 
-# Fetch and display the job result if the job was successful
+# Fetch the job output and extract the IP address, then write it to results.txt
 if [ "$status" = "successful" ]; then
     echo "Fetching job output and extracting IP address..."
-    # Fetch job output
-    job_output=$(curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt")
-    # Extract IP address and save to results.txt
-    echo "$job_output" | grep "RESULTS:" | awk -F':' '{print $2}' | tr -d ' ' > results.txt
+    curl -s -k -H "${AUTHORIZATION}" "https://${AWX_HOST}${stdout_url}?format=txt" | grep "RESULTS:" | awk -F':' '{print $2}' | tr -d ' ' > results.txt
 else
     echo "Job failed. Stdout not fetched."
 fi
