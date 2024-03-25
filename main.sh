@@ -44,3 +44,4 @@ select_infrastructure() {
     fi
 }
 
+select_infrastructure
