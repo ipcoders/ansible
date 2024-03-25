@@ -1,38 +1,41 @@
 #!/bin/bash
 
-OS="$1"             # Example usage: windows_2019, rhel_8
-JAVA="$2"           # TRUE or FALSE
-HOSTCOL="$3"        # PROD or NONPROD
+# Automatically convert input arguments to lowercase to ensure case-insensitive processing
+os="${1,,}"  # Convert OS to lowercase
+java="${2,,}" # Convert JAVA to lowercase (expects 'true' or 'false', case-insensitive)
+hostcol="${3,,}" # Convert HOSTCOL to lowercase (expects 'prod' or 'nonprod', case-insensitive)
 
-# Function to select infrastructure
+echo "Processing with OS: $os, JAVA: $java, HOSTCOL: $hostcol"
+
+# Function to select infrastructure based on the provided criteria
 select_infrastructure() {
-    if [[ "$JAVA" == "TRUE" ]]; then
-        if [[ "$HOSTCOL" == "NONPROD" ]]; then
+    if [[ "$java" == "true" ]]; then
+        if [[ "$hostcol" == "nonprod" ]]; then
             echo "vcenter: https://thpvcj6tdq.thp.tahphq.tahp"
             echo "datacenter: TDQJAVA"
             echo "esxi clusters: TDQJAVA"
-        elif [[ "$HOSTCOL" == "PROD" ]]; then
+        elif [[ "$hostcol" == "prod" ]]; then
             echo "vcenter: https://thpvcj6prod.thp.tahphq.tahp"
             echo "datacenter: MRKJAVAPROD"
             echo "esxi clusters: PRODJAVA"
         fi
-    elif [[ "$JAVA" == "FALSE" ]]; then
-        if [[ "$HOSTCOL" == "NONPROD" ]]; then
-            if [[ "$OS" == windows* ]]; then
+    elif [[ "$java" == "false" ]]; then
+        if [[ "$hostcol" == "nonprod" ]]; then
+            if [[ "$os" == "windows"* ]]; then
                 echo "vcenter: https://thpvc6tdq.thp.tahphq.tahp"
                 echo "datacenter: MRKPROD"
                 echo "esxi clusters: TDQ1"
-            elif [[ "$OS" == rhel* ]]; then
+            elif [[ "$os" == "rhel"* ]]; then
                 echo "vcenter: https://thpvc6tdq.thp.tahphq.tahp"
                 echo "datacenter: MRKPROD"
                 echo "esxi clusters: RHELTEST"
             fi
-        elif [[ "$HOSTCOL" == "PROD" ]]; then
-            if [[ "$OS" == windows* ]]; then
+        elif [[ "$hostcol" == "prod" ]]; then
+            if [[ "$os" == "windows"* ]]; then
                 echo "vcenter: https://thpvc6prod.thp.tahphq.tahp"
                 echo "datacenter: MRKPROD"
                 echo "esxi clusters: PROD1"
-            elif [[ "$OS" == rhel* ]]; then
+            elif [[ "$os" == "rhel"* ]]; then
                 echo "vcenter: https://thpvc6prod.thp.tahphq.tahp"
                 echo "datacenter: MRKPROD"
                 echo "esxi clusters: RHELPROD"
